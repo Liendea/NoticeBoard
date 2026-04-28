@@ -1,0 +1,49 @@
+/* POST ITS */
+
+.post-its-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  font-family: "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+}
+
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: white;
+  padding: 1rem 1rem 10px 1rem;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  min-height: 200px;
+  max-height: 400px;
+
+  button {
+    padding: 5px 10px;
+    font-size: 0.5rem;
+  }
+}
+
+.todo {
+  height: auto;
+  width: 100%;
+
+  .todo-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-block: 10px;
+  }
+  .todo-description {
+    font-size: 0.8rem;
+    width: 100%;
+    line-break: anywhere;
+  }
+}
+
+.status {
+  font-size: 0.5rem;
+  color: #555;
+  text-align: right;
+}

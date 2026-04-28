@@ -1,0 +1,49 @@
+.create-post-it {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+/* FORM */
+.form-title {
+  margin-bottom: 15px;
+  color: #000000;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 100%;
+
+  input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+  textarea {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    resize: none;
+    border: none;
+  }
+
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+    border: none;
+  }
+}
