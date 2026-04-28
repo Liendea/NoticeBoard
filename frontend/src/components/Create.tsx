@@ -1,19 +1,17 @@
 import Button from "./Button";
 import { useState } from "react";
 import "../styles/create.css";
-import useTodos from "../hooks/useTodos";
+
 import type { NewTodo } from "../types/Types";
 
 type CreateProps = {
-  onTodoAdded: () => void;
+  createTodo: (newTodo: NewTodo) => Promise<Response>;
 };
 
-export default function Create({ onTodoAdded }: CreateProps) {
+export default function Create({ createTodo }: CreateProps) {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("low");
-
-  const { createTodo } = useTodos();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,7 +25,6 @@ export default function Create({ onTodoAdded }: CreateProps) {
     try {
       const response = await createTodo(newTodo);
       if (response.ok) {
-        onTodoAdded();
         setTitle("");
         setDescription("");
         setPriority("low");

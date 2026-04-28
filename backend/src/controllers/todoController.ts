@@ -25,7 +25,7 @@ export const getTodos = async (req: Request, res: Response) => {
   }
 };
 
-// SKapa en ny To-do
+// SKapa en ny To-do + retiurnera den skapade todon så att ui kan uppdaetras korrekt
 export const createTodo = async (req: Request, res: Response) => {
   const newTodo = new Todo(req.body);
   await newTodo.save();
@@ -47,12 +47,22 @@ export const updateTodo = async (req: Request, res: Response) => {
   }
 };
 
-// Ta bort en To-do
+// Ta bort en To-do + returnera den borttagna todon så att UI kan uppdateras korrekt
 export const deleteTodo = async (req: Request, res: Response) => {
   try {
-    await Todo.findByIdAndDelete(req.params.id);
-    res.json({ message: "Borttagen!" });
+    const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
+    res.json(deletedTodo);
   } catch (err) {
     res.status(500).json({ message: "Fel vid radering" });
+  }
+};
+
+// Räkna todos
+export const getTotalInDb = async (req: Request, res: Response) => {
+  try {
+    const total = await Todo.countDocuments();
+    res.json({ count: total });
+  } catch (error) {
+    res.status(500).json({ error: "Kunde inte räkna todos" });
   }
 };

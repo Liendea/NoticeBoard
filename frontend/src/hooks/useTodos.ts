@@ -1,22 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { TodoType, NewTodo } from "../types/Types";
 
 const API_URL = "http://localhost:3000/api/todos";
 
 export default function useTodos() {
   const [todos, setTodos] = useState<TodoType[]>([]);
+  const [totalInDb, setTotalInDb] = useState<number>(0);
 
-  // Hämta todos, alla eller med query
-  const getTodos = (query: string = "") => {
+  // Hämta todos (wrappad i callback)
+  const getTodos = useCallback((query: string = "") => {
     fetch(`${API_URL}${query}`)
       .then((response) => response.json())
-      .then((data) => {
-        setTodos(data);
-      })
-      .catch((error) => {
-        console.error("Fel vid hämtning av todos:", error);
-      });
-  };
+      .then((data) => setTodos(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  // hämta antal document i DB (wrappad i callback)
+  const fetchTotalCount = useCallback(() => {
+    fetch(`${API_URL}/count`)
+      .then((res) => res.json())
+      .then((data) => setTotalInDb(data.count))
+      .catch((err) => console.error("Count error:", err));
+  }, []);
+
+  // UseEffect som hämtar todos när appen startar
+  useEffect(() => {
+    getTodos();
+    fetchTotalCount();
+  }, [getTodos, fetchTotalCount]);
 
   // Skapa todo
   const createTodo = async (newTodo: NewTodo) => {
@@ -28,6 +39,17 @@ export default function useTodos() {
       },
       body: JSON.stringify(newTodo), // Gör om objektet till en textsträng
     });
+
+    if (response.ok) {
+      // Hämta den nyskapade todon från backend-svaret
+      const createdTodo = await response.json();
+      // Uppdatera statet genom att lägga till den nya todon i listan
+      setTodos((prevTodos) => [...prevTodos, createdTodo]);
+
+      // ANROP DIREKT HÄR:
+      fetchTotalCount();
+    }
+
     return response; // returnera hela response objektet
   };
 
@@ -39,6 +61,8 @@ export default function useTodos() {
       .then((response) => {
         if (response.ok) {
           setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
+          // ANROP DIREKT HÄR:
+          fetchTotalCount();
         } else {
           alert("Något gick fel vid borttagningen");
         }
@@ -79,10 +103,13 @@ export default function useTodos() {
       });
   };
 
-  // Hämtar alla todos när komponenten laddas och när en ny todo läggs till
-  useEffect(() => {
-    getTodos();
-  }, []); // Lägg till todos.length som beroende för att uppdatera listan när en ny todo läggs till
-
-  return { todos, getTodos, deleteTodo, updateTodo, setTodos, createTodo };
+  return {
+    todos,
+    totalInDb,
+    getTodos,
+    deleteTodo,
+    updateTodo,
+    setTodos,
+    createTodo,
+  };
 }

@@ -1,0 +1,66 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e3e3e3;
+  height: 100vh;
+}
+
+.app {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 100%;
+  min-width: 100%;
+}
+
+.post-it-section {
+  padding: 4rem;
+  width: 80%;
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 20%;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  .top,
+  .middle,
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    padding: 2rem;
+  }
+  .top {
+    background-color: rgb(252, 205, 248);
+    flex: 3;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 2rem;
+  }
+
+  .middle {
+    background-color: rgb(210, 157, 251);
+    border-radius: 20px;
+    height: 10vh;
+  }
+
+  .bottom {
+    background-color: rgb(161, 229, 240);
+    flex: 2;
+    border-radius: 20px 20px 0 0;
+    margin-top: 2rem;
+    justify-content: flex-start;
+  }
+}

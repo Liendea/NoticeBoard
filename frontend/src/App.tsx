@@ -1,10 +1,11 @@
-import "./app.css";
+import "./styles/app.css";
 import "./styles/buttons.css";
 import Create from "./components/Create";
 import Todo from "./components/Todo";
 import useTodos from "./hooks/useTodos";
 import Search from "./components/Search";
 import Legend from "./components/Legend";
+import Display from "./components/Display";
 
 // DND
 import {
@@ -23,8 +24,17 @@ import {
 import { SortableTodo } from "./components/DND-Component/SortableTodo";
 
 export default function App() {
-  const { todos, getTodos, deleteTodo, updateTodo, setTodos } = useTodos();
+  const {
+    todos,
+    getTodos,
+    deleteTodo,
+    updateTodo,
+    setTodos,
+    createTodo,
+    totalInDb,
+  } = useTodos();
 
+  // DND SETTINGS
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -32,7 +42,6 @@ export default function App() {
       },
     }),
   );
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -65,7 +74,6 @@ export default function App() {
               {todos.map((todo) => (
                 /* 3. Använd SortableTodo som "skal" */
                 <SortableTodo key={todo._id} id={todo._id}>
-                  {/* 4. Din vanliga Todo-komponent inuti skalet */}
                   <Todo
                     description={todo.description}
                     title={todo.title}
@@ -84,11 +92,15 @@ export default function App() {
 
       <section className="sidebar-section">
         <div className="top">
-          <Create onTodoAdded={getTodos} />
+          <Create createTodo={createTodo} />
           <Legend />
         </div>
-        <hr />
-        <Search onSearch={getTodos} />
+        <div className="middle">
+          <Display todos={todos} totalTodos={totalInDb} />
+        </div>
+        <div className="bottom">
+          <Search onSearch={getTodos} />
+        </div>
       </section>
     </div>
   );
