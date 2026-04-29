@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-// 1. Schemat - Ritningen för en enskild Todo
+// 1. Schemat - för en enskild Todo
 const todoSchema = new Schema({
   title: {
     type: String,
@@ -26,5 +26,5 @@ const todoSchema = new Schema({
   },
 });
 
-// 2. Modellen - Verktyget vi exporterar för att styra databasen
+// 2. Modellen - Verktyget som exporteras för att styra databasen
 export const Todo = model("Todo", todoSchema);

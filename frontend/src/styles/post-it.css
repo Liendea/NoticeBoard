@@ -32,6 +32,7 @@
     font-size: 1rem;
     font-weight: bold;
     margin-block: 10px;
+    text-align: left;
   }
   .todo-description {
     font-size: 0.8rem;

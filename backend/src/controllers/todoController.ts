@@ -1,68 +1,86 @@
 import type { Request, Response } from "express";
-import { Todo } from "../models/Todo.js";
+import {
+  updateTodoService,
+  deleteTodoService,
+  getTotalTodosService,
+  createTodoService,
+  getTodosService,
+} from "services/todoService.js";
 
-// HÄmta alla To-Do
-// med query filter, t.ex ?completed=true eller ?search=ikaffe
+// ----- Hämta alla To-Do ----- //
 export const getTodos = async (req: Request, res: Response) => {
   try {
-    const { completed, search } = req.query;
-    let queryFilter: any = {};
+    // Plocka ut query-parametrar från URL:en (t.ex. ?search=kaffe)
+    const { completed, search } = req.query as {
+      completed?: string;
+      search?: string;
+    };
 
-    if (completed !== undefined) {
-      queryFilter.completed = completed === "true";
-    }
+    // Anropa servicen med dessa parametrar
+    const todos = await getTodosService(completed, search);
 
-    if (search) {
-      queryFilter.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ];
-    }
-    const todos = await Todo.find(queryFilter);
+    // Skicka tillbaka resultatet till användaren
     res.json(todos);
   } catch (error) {
     res.status(500).json({ message: "Fel vid hämtning av todos" });
   }
 };
 
-// SKapa en ny To-do + retiurnera den skapade todon så att ui kan uppdaetras korrekt
+// ----- Skapa ny To-do + returnera den skapade todon så att ui kan uppdaetras korrekt ----- //
 export const createTodo = async (req: Request, res: Response) => {
-  const newTodo = new Todo(req.body);
-  await newTodo.save();
-  res.status(201).json(newTodo);
+  try {
+    // Skicka datan till servicen
+    const newTodo = await createTodoService(req.body);
+
+    // Om allt gick bra: 201 Created
+    res.status(201).json(newTodo);
+  } catch (error: any) {
+    // Om t.ex. valideringen i schemat misslyckas (t.ex. saknad titel)
+    res
+      .status(400)
+      .json({ message: "Kunde inte skapa todo", error: error.message });
+  }
 };
 
-// Ändra en To-do
+// -----  Ändra en To-do ----- //
 export const updateTodo = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const updatedTodo = await Todo.findByIdAndUpdate(id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
-    if (!updatedTodo) return res.status(404).json({ message: "Hittade ej" });
+    const { id } = req.params as { id: string };
+    const updatedTodo = await updateTodoService(id, req.body);
     res.json(updatedTodo);
-  } catch (error) {
-    res.status(400).json({ message: "Fel vid uppdatering" });
+  } catch (error: any) {
+    const status = error.message === "Todo not found" ? 404 : 400;
+    res.status(status).json({ message: "Fel vid uppdatering" });
   }
 };
 
-// Ta bort en To-do + returnera den borttagna todon så att UI kan uppdateras korrekt
+// ----- Ta bort en To-do + returnera den borttagna todon så att UI kan uppdateras korrekt ----- //
 export const deleteTodo = async (req: Request, res: Response) => {
   try {
-    const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
+    // Använd typning för att plocka ut id
+    const { id } = req.params as { id: string };
+    // Anropa servicen
+    const deletedTodo = await deleteTodoService(id);
+    // Om allt gick bra returnera den raderade todon
     res.json(deletedTodo);
-  } catch (err) {
-    res.status(500).json({ message: "Fel vid radering" });
+  } catch (err: any) {
+    // Om servicen kastade "Todo not found", skicka 404
+    if (err.message === "Todo not found") {
+      return res.status(404).json({ message: "Todon hittades inte" });
+    }
+    // För alla andra fel (t.ex. databasen är nere), skicka 500
+    res.status(500).json({ message: "Ett oväntat fel uppstod vid radering" });
   }
 };
 
-// Räkna todos
+// ----- Räkna antalet todos i Db ----- //
 export const getTotalInDb = async (req: Request, res: Response) => {
   try {
-    const total = await Todo.countDocuments();
+    // Anropa servicen
+    const total = await getTotalTodosService();
     res.json({ count: total });
   } catch (error) {
+    // Om något går fel (t.ex. databasen svarar inte)
     res.status(500).json({ error: "Kunde inte räkna todos" });
   }
 };

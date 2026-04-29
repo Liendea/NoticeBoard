@@ -1,0 +1,59 @@
+import { Todo } from "models/Todo.js";
+
+// -----  Business lgoic för att hämta todos -----//
+export const getTodosService = async (completed?: string, search?: string) => {
+  let queryFilter: any = {};
+
+  // Logik för att filtrera på status
+  if (completed !== undefined) {
+    queryFilter.completed = completed === "true";
+  }
+
+  // Logik för sökning
+  if (search) {
+    queryFilter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // Utför själva sökningen i databasen
+  return await Todo.find(queryFilter);
+};
+
+// -----  Business logic för att skapa en ny todo ----- //
+export const createTodoService = async (todoData: any) => {
+  // Här kan du lägga till extra logik innan sparande
+  const newTodo = new Todo(todoData);
+
+  // .save() kommer validera mot Mongoose-schemat
+  await newTodo.save();
+  return newTodo;
+};
+
+// -----  Businesslogic för att uppdatera ----- //
+export const updateTodoService = async (
+  id: string,
+  updateData: Partial<typeof Todo>,
+) => {
+  const updatedTodo = await Todo.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    runValidators: true,
+  });
+
+  if (!updatedTodo) throw new Error("Todo not found");
+  return updatedTodo;
+};
+
+// ----- Business logic för att radera ----- //
+export const deleteTodoService = async (id: string) => {
+  const deletedTodo = await Todo.findByIdAndDelete(id);
+  if (!deletedTodo) throw new Error("Todo not found");
+  return deletedTodo;
+};
+
+// -----  Business logic för att räkna alla todos ----- //
+export const getTotalTodosService = async () => {
+  // Här bor själva databasanropet
+  return await Todo.countDocuments();
+};

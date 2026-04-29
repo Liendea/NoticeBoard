@@ -29,6 +29,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 20%;
+  min-width: 300px;
   min-height: 100vh;
   position: fixed;
   top: 0;
