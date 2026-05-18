@@ -59,6 +59,7 @@ export default function Todo({
         <h3
           className="todo-title"
           contentEditable
+          spellCheck="false"
           suppressContentEditableWarning
           onBlur={(e) => {
             const newTitle = e.currentTarget.textContent ?? "";
@@ -76,10 +77,12 @@ export default function Todo({
         <p
           className="todo-description"
           contentEditable
+          spellCheck="false"
           suppressContentEditableWarning
           onBlur={(e) => {
             const newDesc = e.currentTarget.textContent ?? "";
-            if (newDesc !== description) updateTodo(_id, { description: newDesc });
+            if (newDesc !== description)
+              updateTodo(_id, { description: newDesc });
           }}
         >
           {description}
