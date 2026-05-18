@@ -80,7 +80,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app will be containerized using Docker and deployed to AWS or GCP via GitHub Actions.
 
 ## API Endpoints
 
