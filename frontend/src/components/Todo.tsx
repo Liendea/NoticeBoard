@@ -58,8 +58,8 @@ export default function Todo({
       <div className="todo">
         <h3
           className="todo-title"
-          contentEditable
           spellCheck="false"
+          contentEditable
           suppressContentEditableWarning
           onBlur={(e) => {
             const newTitle = e.currentTarget.textContent ?? "";
