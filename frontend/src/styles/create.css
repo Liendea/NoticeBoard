@@ -5,6 +5,7 @@
   justify-content: flex-start;
   margin-bottom: 1rem;
   margin-top: 2rem;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
 /* FORM */
 .form-title {

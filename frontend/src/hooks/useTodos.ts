@@ -73,25 +73,34 @@ export default function useTodos() {
   };
 
   // uppdatera
-  const updateTodo = (_id: string) => {
+  const updateTodo = (
+    _id: string,
+    updates?: {
+      title?: string;
+      description?: string;
+      priority?: "low" | "medium" | "high";
+    },
+  ) => {
+    const body = updates ?? {
+      completed: !todos.find((todo) => todo._id === _id)?.completed,
+    };
+
     fetch(`${API_URL}/${_id}`, {
-      method: "PATCH", // Berätta att vi vill UPPDATERA något
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        completed: !todos.find((todo) => todo._id === _id)?.completed,
-      }), // Skicka motsatt värde för att toggla
+      body: JSON.stringify(body),
     })
       .then((response) => {
         if (response.ok) {
-          // Vi skapar en ny array baserad på den gamla
           setTodos((prevTodos) =>
-            prevTodos.map(
-              (todo) =>
-                todo._id === _id
-                  ? { ...todo, completed: !todo.completed } // Om ID matchar, ändra 'completed'
-                  : todo, // Annars, behåll todon som den är
+            prevTodos.map((todo) =>
+              todo._id === _id
+                ? updates
+                  ? { ...todo, ...updates }
+                  : { ...todo, completed: !todo.completed }
+                : todo,
             ),
           );
         } else {

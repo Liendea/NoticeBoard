@@ -8,7 +8,14 @@ type TodoProps = {
   completed: boolean;
   _id: string;
   onDelete: (id: string) => void;
-  updateTodo: (id: string) => void;
+  updateTodo: (
+    id: string,
+    updates?: {
+      title?: string;
+      description?: string;
+      priority?: "low" | "medium" | "high";
+    },
+  ) => void;
 };
 
 const colorMap: Record<TodoProps["priority"], string> = {
@@ -30,14 +37,53 @@ export default function Todo({
     <div
       className="todo-container"
       style={{
-        backgroundColor: completed ? "#B7FB87" : `${colorMap[priority]}`,
+        backgroundColor: completed ? "#B7FB87" : colorMap[priority],
       }}
     >
-      <p className="status">Status: {completed ? "Klar" : "Ej klar"}</p>
+      <div className="todo-top">
+        <div className="priority-dots">
+          {(["low", "medium", "high"] as const).map((p) => (
+            <button
+              key={p}
+              className={`priority-dot${priority === p ? " active" : ""}`}
+              style={{ backgroundColor: colorMap[p] }}
+              onClick={() => updateTodo(_id, { priority: p })}
+              aria-label={p}
+            />
+          ))}
+        </div>
+        <p className="status">Status: {completed ? "Klar" : "Ej klar"}</p>
+      </div>
 
       <div className="todo">
-        <h3 className="todo-title">{title}</h3>
-        <p className="todo-description">{description}</p>
+        <h3
+          className="todo-title"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => {
+            const newTitle = e.currentTarget.textContent ?? "";
+            if (newTitle !== title) updateTodo(_id, { title: newTitle });
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              e.currentTarget.blur();
+            }
+          }}
+        >
+          {title}
+        </h3>
+        <p
+          className="todo-description"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => {
+            const newDesc = e.currentTarget.textContent ?? "";
+            if (newDesc !== description) updateTodo(_id, { description: newDesc });
+          }}
+        >
+          {description}
+        </p>
       </div>
 
       <div className="btn-container">
