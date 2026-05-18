@@ -9,11 +9,12 @@ export const getTodosService = async (completed?: string, search?: string) => {
     queryFilter.completed = completed === "true";
   }
 
-  // Logik för sökning
+  // Logik för sökning — escapa specialtecken för att förhindra regex-injektion/ReDoS
   if (search) {
+    const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     queryFilter.$or = [
-      { title: { $regex: search, $options: "i" } },
-      { description: { $regex: search, $options: "i" } },
+      { title: { $regex: safeSearch, $options: "i" } },
+      { description: { $regex: safeSearch, $options: "i" } },
     ];
   }
 
