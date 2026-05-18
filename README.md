@@ -2,6 +2,8 @@
 
 A full-stack to-do list app with drag-and-drop reordering and priority management. Notes are displayed as post-its on a board and can be organized, searched, and updated in real time.
 
+<img width="3374" height="1816" alt="bild" src="https://github.com/user-attachments/assets/1b72b0f5-89a4-4f67-acb6-0fc3529d39da" />
+
 ## Tech Stack
 
 **Frontend**
