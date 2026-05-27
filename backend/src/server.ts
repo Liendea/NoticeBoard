@@ -1,20 +1,23 @@
 import "dotenv/config"; // Importera miljövariablar högst upp
-import mongoose from "mongoose"; // Behövs för att stänga DB-anslutningen
+import { Server } from "http";
+import mongoose from "mongoose";
 import connectDB from "./config/db.js";
-import app from "app.js";
+import app from "./app.js";
 
 const PORT = process.env.PORT || 3000;
-// Vi skapar en variabel för att hålla server-instansen
-let server: any;
+
+//  variabel för att hålla server-instansen
+let server: Server | null = null;
+
 // START-FUNKTION
 const startApp = async () => {
   try {
     // 1. Vänta på anslutning databasen
     await connectDB();
 
-    // 2. Starta servern först när DB är redo
-    app.listen(PORT, () => {
-      console.log(` Servern körs på http://localhost:${PORT}`);
+    // 2. Starta servern och SPARA INSTANSEN i server variabel!
+    server = app.listen(PORT, () => {
+      console.log(`🚀 Servern körs på http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error(" Kunde inte starta appen pga databasfel:", error);
@@ -23,7 +26,6 @@ const startApp = async () => {
 };
 
 // --- GRACEFUL SHUTDOWN LOGIK ---
-// Denna funktion hanterar snygg avstängning
 const gracefulShutdown = async (signal: string) => {
   console.log(`\n♻️  Tagit emot ${signal}. Påbörjar snygg avstängning...`);
 
@@ -43,12 +45,13 @@ const gracefulShutdown = async (signal: string) => {
       }
     });
   } else {
+    // Om servern inte ens hann starta stänger vi bara ner direkt
     process.exit(0);
   }
 };
 
 // Lyssna på signaler från terminalen (t.ex. Ctrl+C)
-process.on("SIGINT", () => gracefulShutdown("SIGINT")); // manuell avstängning
-process.on("SIGTERM", () => gracefulShutdown("SIGTERM")); // automatiskt avstämngnng tex om databasen låg på molntjänst som behöver starta om
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 
 startApp();

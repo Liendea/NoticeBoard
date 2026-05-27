@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Kopiera package.json och installera dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Kopiera resten av filerna (används mest för produktion, 
 # i utveckling skrivs detta över av din "volume" i docker-compose)

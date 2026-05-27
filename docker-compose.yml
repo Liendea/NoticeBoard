@@ -4,15 +4,16 @@ services:
   backend-service:
     build:
       context: ./backend
+
       dockerfile: Dockerfile
     ports:
-      - "5001:3000" # <--- ÄNDRAD: Tar emot på 5001 lokalt, skickar till 3000 inuti containern
+      - "5001:3000"
     volumes:
       - ./backend:/app
       - /app/node_modules
     environment:
       - PORT=3000
-      - DATABASE_URL=mongodb+srv://admin-developer:URSi9UI0jxHUYHCL@notice-board-cluster.keqxwno.mongodb.net/?appName=Notice-Board-Cluster
+      - DATABASE_URL=${DATABASE_URL}
 
   frontend-service:
     build:
