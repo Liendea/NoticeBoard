@@ -21,7 +21,7 @@ export const getTodos = async (req: Request, res: Response) => {
 
     // Skicka tillbaka resultatet till användaren
     res.json(todos);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Fel vid hämtning av todos" });
   }
 };
@@ -34,11 +34,9 @@ export const createTodo = async (req: Request, res: Response) => {
 
     // Om allt gick bra: 201 Created
     res.status(201).json(newTodo);
-  } catch (error: any) {
+  } catch {
     // Om t.ex. valideringen i schemat misslyckas (t.ex. saknad titel)
-    res
-      .status(400)
-      .json({ message: "Kunde inte skapa todo", error: error.message });
+    res.status(400).json({ message: "Kunde inte skapa todo" });
   }
 };
 
@@ -48,24 +46,23 @@ export const updateTodo = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
     const updatedTodo = await updateTodoService(id, req.body);
     res.json(updatedTodo);
-  } catch (error: any) {
-    const status = error.message === "Todo not found" ? 404 : 400;
-    res.status(status).json({ message: "Fel vid uppdatering" });
+  } catch {
+    res.status(400).json({ message: "Fel vid uppdatering" });
   }
 };
 
 // ----- Ta bort en To-do + returnera den borttagna todon så att UI kan uppdateras korrekt ----- //
 export const deleteTodo = async (req: Request, res: Response) => {
   try {
-    // Använd typning för att plocka ut id
+    // Använd typing för att plocka ut id
     const { id } = req.params as { id: string };
     // Anropa servicen
     const deletedTodo = await deleteTodoService(id);
     // Om allt gick bra returnera den raderade todon
     res.json(deletedTodo);
-  } catch (err: any) {
+  } catch (err) {
     // Om servicen kastade "Todo not found", skicka 404
-    if (err.message === "Todo not found") {
+    if (err instanceof Error && err.message === "Todo not found") {
       return res.status(404).json({ message: "Todon hittades inte" });
     }
     // För alla andra fel (t.ex. databasen är nere), skicka 500
@@ -79,7 +76,7 @@ export const getTotalInDb = async (req: Request, res: Response) => {
     // Anropa servicen
     const total = await getTotalTodosService();
     res.json({ count: total });
-  } catch (error) {
+  } catch {
     // Om något går fel (t.ex. databasen svarar inte)
     res.status(500).json({ error: "Kunde inte räkna todos" });
   }

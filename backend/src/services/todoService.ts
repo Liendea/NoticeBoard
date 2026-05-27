@@ -1,8 +1,14 @@
 import { Todo } from "models/Todo.js";
 
+type CreateTodoInput = {
+  title: string;
+  description?: string;
+  completed?: boolean;
+};
+
 // -----  Business lgoic för att hämta todos -----//
 export const getTodosService = async (completed?: string, search?: string) => {
-  let queryFilter: any = {};
+  const queryFilter: Record<string, unknown> = {};
 
   // Logik för att filtrera på status
   if (completed !== undefined) {
@@ -23,7 +29,7 @@ export const getTodosService = async (completed?: string, search?: string) => {
 };
 
 // -----  Business logic för att skapa en ny todo ----- //
-export const createTodoService = async (todoData: any) => {
+export const createTodoService = async (todoData: CreateTodoInput) => {
   // Här kan du lägga till extra logik innan sparande
   const newTodo = new Todo(todoData);
 
@@ -35,7 +41,7 @@ export const createTodoService = async (todoData: any) => {
 // -----  Businesslogic för att uppdatera ----- //
 export const updateTodoService = async (
   id: string,
-  updateData: Partial<typeof Todo>,
+  updateData: Partial<CreateTodoInput>,
 ) => {
   const updatedTodo = await Todo.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
