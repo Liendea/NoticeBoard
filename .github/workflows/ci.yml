@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "25.9"
           cache: "npm" # Sparar cache för att göra framtida körningar snabbare
 
       # 3. Installerar alla paket i frontend (inklusive dina ESLint/TS-plugins)
