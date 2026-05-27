@@ -1,36 +1,34 @@
 name: Monorepo CI (TypeScript Linting)
 
-# Denna pipeline körs vid varje push eller Pull Request till main-branchen
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
+# Tvinga GitHubs egna interna skript att köra på Node 24+ för att slippa varningen
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   lint-project:
-    runs-on: ubuntu-latest # GitHub startar en tom Linux-server åt oss
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Laddar ner din kod till GitHubs server
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Installerar Node.js (Välj den version du kör lokalt, t.ex. 20)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "25.9"
-          cache: "npm" # Sparar cache för att göra framtida körningar snabbare
+          node-version: "22" # Kör på Node 22 (LTS) för bästa stabilitet i miljön
+          cache: "npm"
 
-      # 3. Installerar alla paket i frontend (inklusive dina ESLint/TS-plugins)
       - name: Install Frontend Dependencies
-        run: npm ci --prefix frontend
+        run: npm ci --prefix frontend --legacy-peer-deps # Lade till flaggan här också!
 
-      # 4. Installerar alla paket i backend
       - name: Install Backend Dependencies
         run: npm ci --prefix backend
 
-      # 5. Kör det gemensamma lint-kommandot från roten
       - name: Run ESLint on Frontend and Backend
         run: npm run lint --prefix .
