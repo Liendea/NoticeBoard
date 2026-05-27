@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: ["main"]
 
-# Tvinga GitHubs egna interna skript att köra på Node 24+ för att slippa varningen
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -21,14 +20,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22" # Kör på Node 22 (LTS) för bästa stabilitet i miljön
+          node-version: "22"
           cache: "npm"
 
       - name: Install Frontend Dependencies
-        run: npm ci --prefix frontend --legacy-peer-deps # Lade till flaggan här också!
+        run: npm ci --prefix frontend --legacy-peer-deps
 
       - name: Install Backend Dependencies
         run: npm ci --prefix backend
 
-      - name: Run ESLint on Frontend and Backend
-        run: npm run lint --prefix .
+      #  Kör lint i varje mapp för sig!
+      - name: Run ESLint on Frontend
+        run: npm run lint --prefix frontend
+
+      - name: Run ESLint on Backend
+        run: npm run lint --prefix backend
