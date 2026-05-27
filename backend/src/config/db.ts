@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "";
+const DATABASE_URL = process.env.DATABASE_URL || "";
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(MONGODB_URI || "");
+    const conn = await mongoose.connect(DATABASE_URL || "");
     console.log(`✅ MongoDB ansluten: ${conn.connection.host}`);
   } catch (error: any) {
     console.error(` Fel vid anslutning: ${error.message}`);

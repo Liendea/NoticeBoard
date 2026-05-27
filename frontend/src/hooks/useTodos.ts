@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import type { TodoType, NewTodo } from "../types/Types";
 
-const API_URL = "http://localhost:3000/api/todos";
+//const VITE_BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}/api/todos`;
+const VITE_BACKEND_URL = "http://56.228.26.192:5001/api/todos";
 
 export default function useTodos() {
   const [todos, setTodos] = useState<TodoType[]>([]);
@@ -9,7 +10,7 @@ export default function useTodos() {
 
   // Hämta todos (wrappad i callback)
   const getTodos = useCallback((query: string = "") => {
-    fetch(`${API_URL}${query}`)
+    fetch(`${VITE_BACKEND_URL}${query}`)
       .then((response) => response.json())
       .then((data) => setTodos(data))
       .catch((err) => console.error(err));
@@ -17,7 +18,7 @@ export default function useTodos() {
 
   // hämta antal document i DB (wrappad i callback)
   const fetchTotalCount = useCallback(() => {
-    fetch(`${API_URL}/count`)
+    fetch(`${VITE_BACKEND_URL}/count`)
       .then((res) => res.json())
       .then((data) => setTotalInDb(data.count))
       .catch((err) => console.error("Count error:", err));
@@ -32,7 +33,7 @@ export default function useTodos() {
   // Skapa todo
   const createTodo = async (newTodo: NewTodo) => {
     // Skicka anropet till backend
-    const response = await fetch(API_URL, {
+    const response = await fetch(VITE_BACKEND_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export default function useTodos() {
 
   // Delete
   const deleteTodo = (id: string) => {
-    fetch(`${API_URL}/${id}`, {
+    fetch(`${VITE_BACKEND_URL}/${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -85,7 +86,7 @@ export default function useTodos() {
       completed: !todos.find((todo) => todo._id === _id)?.completed,
     };
 
-    fetch(`${API_URL}/${_id}`, {
+    fetch(`${VITE_BACKEND_URL}/${_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
