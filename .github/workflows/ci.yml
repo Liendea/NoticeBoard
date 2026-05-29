@@ -50,9 +50,12 @@ jobs:
             # 1. Gå till mappen där ditt projekt ligger på servern
             cd ~/app
 
-            # 2. Hämta den senaste koden från GitHub
+            # 2. Logga in på AWS ECR direkt inifrån servern (automatiserat!)
+            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-north-1.amazonaws.com
+
+            # 3. Hämta den senaste koden från GitHub
             git pull origin main
 
-            # 3. Bygg om och starta appen i bakgrunden (-d) utan cache
+            # 4. Bygg om och starta appen i bakgrunden (-d) utan cache
             docker compose build --no-cache
             docker compose up -d
