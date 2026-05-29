@@ -21,7 +21,8 @@ export const getTodos = async (req: Request, res: Response) => {
 
     // Skicka tillbaka resultatet till användaren
     res.json(todos);
-  } catch {
+  } catch (error) {
+    console.error("Fel i getTodos controller:", error);
     res.status(500).json({ message: "Fel vid hämtning av todos" });
   }
 };
@@ -76,7 +77,8 @@ export const getTotalInDb = async (req: Request, res: Response) => {
     // Anropa servicen
     const total = await getTotalTodosService();
     res.json({ count: total });
-  } catch {
+  } catch (error) {
+    console.error("Fel i getTotalInDb controller:", error);
     // Om något går fel (t.ex. databasen svarar inte)
     res.status(500).json({ error: "Kunde inte räkna todos" });
   }
