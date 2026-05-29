@@ -6,10 +6,12 @@ const todoSchema = new Schema({
     type: String,
     required: [true, "Du måste skriva vad som ska göras"],
     trim: true,
+    maxLength: [100, "Titeln får inte vara längre än 100 tecken"],
   },
   description: {
     type: String,
     trim: true,
+    maxLength: [500, "Beskrivningen får inte vara längre än 500 tecken"],
   },
   completed: {
     type: Boolean,

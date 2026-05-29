@@ -61,6 +61,5 @@ export const deleteTodoService = async (id: string) => {
 
 // -----  Business logic för att räkna alla todos ----- //
 export const getTotalTodosService = async () => {
-  // Här bor själva databasanropet
   return await Todo.countDocuments();
 };
