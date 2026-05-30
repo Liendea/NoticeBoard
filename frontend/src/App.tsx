@@ -7,7 +7,7 @@ import Search from "./components/Search";
 import Legend from "./components/Legend";
 import Display from "./components/Display";
 
-// DND
+// DND (Drag and Drop)
 import {
   DndContext,
   closestCenter,
