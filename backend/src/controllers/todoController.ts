@@ -71,7 +71,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
   }
 };
 
-// ----- Räkna antalet todos i Db ----- //
+// ---- Räkna antalet todos i Db ---- //
 export const getTotalInDb = async (req: Request, res: Response) => {
   try {
     // Anropa servicen
