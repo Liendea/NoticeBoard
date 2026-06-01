@@ -8,9 +8,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5001:3000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
@@ -20,7 +17,4 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "5173:80"

@@ -1,20 +1,15 @@
-# Välj en bas-image
-FROM node:20-alpine
-
-# Sätt arbetskatalogen INNE i containern till /app
+# ── Steg 1: Bygg ──────────────────────────────────────
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Kopiera package.json och installera dependencies
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
-
-# Kopiera resten av filerna (används mest för produktion, 
-# i utveckling skrivs detta över av din "volume" i docker-compose)
+RUN npm ci --legacy-peer-deps
 COPY . .
-
-#  Ta emot argumentet från GitHub Actions och gör om till miljövariabel innan build!
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+RUN npm run build
 
-
-CMD ["npm", "run", "dev"]
+# ── Steg 2: Servera ───────────────────────────────────
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

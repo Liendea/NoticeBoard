@@ -6,10 +6,12 @@ WORKDIR /app
 
 # Kopiera package.json och installera dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Kopiera resten av filerna (används mest för produktion, 
-# i utveckling skrivs detta över av din "volume" i docker-compose)
+# Kopiera resten av filerna
 COPY . .
 
-CMD ["npm", "run", "dev"]
+# Kompilera TypeScript till JavaScript
+RUN npm run build
+
+CMD ["npm", "run", "start"]
