@@ -1,8 +1,8 @@
 import Button from "./Button";
 import { useState } from "react";
-import "../styles/create.css";
+import "@/styles/create.css";
 
-import type { NewTodo } from "../types/Types";
+import type { NewTodo } from "@/types/Types";
 
 type CreateProps = {
   createTodo: (newTodo: NewTodo) => Promise<Response>;

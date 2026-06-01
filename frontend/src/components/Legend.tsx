@@ -1,4 +1,4 @@
-import "../styles/legends.css";
+import "@/styles/legends.css";
 
 export default function Legend() {
   return (

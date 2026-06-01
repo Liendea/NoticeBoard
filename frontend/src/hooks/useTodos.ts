@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { TodoType, NewTodo } from "../types/Types";
+import type { TodoType, NewTodo } from "@/types/Types";
 
 // Hämta bas-URL:en från Vite och lägg till api-endpoints
 const BASE_URL = import.meta.env.VITE_BACKEND_URL

@@ -1,5 +1,5 @@
-import type { TodoType } from "../types/Types";
-import "../styles/display.css";
+import type { TodoType } from "@/types/Types";
+import "@/styles/display.css";
 
 type DisplayProps = {
   todos: TodoType[];

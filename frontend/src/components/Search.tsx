@@ -1,6 +1,6 @@
-import "../styles/search.css";
+import "@/styles/search.css";
 import Button from "./Button";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 type SearchProps = {
   onSearch: (query: string) => void;
@@ -10,7 +10,7 @@ export default function Search({ onSearch }: SearchProps) {
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     let query = `?search=${searchValue}`;

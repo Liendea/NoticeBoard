@@ -1,5 +1,5 @@
 import Button from "./Button";
-import "../styles/post-it.css";
+import "@/styles/post-it.css";
 
 type TodoProps = {
   title: string;
