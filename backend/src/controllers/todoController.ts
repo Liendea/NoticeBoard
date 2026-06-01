@@ -5,7 +5,7 @@ import {
   getTotalTodosService,
   createTodoService,
   getTodosService,
-} from "services/todoService.js";
+} from "../services/todoService.js";
 
 // ----- Hämta alla To-Do ----- //
 export const getTodos = async (req: Request, res: Response) => {

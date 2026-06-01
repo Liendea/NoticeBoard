@@ -1,4 +1,4 @@
-import { Todo } from "models/Todo.js";
+import { Todo } from "../models/Todo.js";
 
 type CreateTodoInput = {
   title: string;
