@@ -22,7 +22,7 @@ const limiter = rateLimit({
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } })); // Sätter säkra HTTP-headers — tillåter cross-origin anrop från frontenden
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://56.228.26.192"],
+    origin: ["http://localhost:5173", "http://56.228.26.192"], //behöver jag lägga till min nya url här ?
   }),
 ); // Tillåter endast anrop från godkända origins
 app.use(express.json()); // Gör att Express kan tolka inkommande JSON-data i anropets body (req.body)
