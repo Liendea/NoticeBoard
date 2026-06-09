@@ -73,6 +73,16 @@ jobs:
           docker build --build-arg VITE_BACKEND_URL=$VITE_BACKEND_URL -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./frontend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      #CADDYFILE OCH DOCKER-COMPOSE SKICKAS IN TILL EC2 FÖR ATT KÖRA UPP CONTAINRARNA MED DE NYA BILDERNA
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "Caddyfile,docker-compose.yml"
+          target: "~/app/"
+
       # SSH in på EC2 och starta om med de nya bilderna
       - name: Deploy to AWS EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3

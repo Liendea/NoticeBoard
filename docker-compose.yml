@@ -6,8 +6,7 @@ services:
       context: ./backend
 
       dockerfile: Dockerfile
-    ports:
-      - "5001:3000"
+
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
@@ -16,5 +15,22 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+
+  caddy:
+    image: caddy:2-alpine
     ports:
-      - "5173:80"
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: always
+    depends_on:
+      - frontend-service
+      - backend-service
+
+volumes:
+  caddy_data:
+  caddy_config:
