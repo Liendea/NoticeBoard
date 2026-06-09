@@ -2,16 +2,20 @@
 
 A full-stack to-do list app with drag-and-drop reordering and priority management. Notes are displayed as post-its on a board and can be organized, searched, and updated in real time.
 
+This is a school project to learn how to use Docker, AWS EC2 servers and github Actions.
+
 <img width="3374" height="1816" alt="bild" src="https://github.com/user-attachments/assets/1b72b0f5-89a4-4f67-acb6-0fc3529d39da" />
 
 ## Tech Stack
 
 **Frontend**
+
 - React 19 + TypeScript
 - Vite
 - dnd-kit (drag-and-drop)
 
 **Backend**
+
 - Node.js + Express 5
 - TypeScript
 - MongoDB + Mongoose
@@ -86,13 +90,13 @@ The app will be containerized using Docker and deployed to AWS or GCP via GitHub
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/todos` | Get all todos |
-| GET | `/todos/count` | Get total and visible count |
-| POST | `/todos` | Create a new todo |
-| PUT | `/todos/:id` | Update a todo |
-| DELETE | `/todos/:id` | Delete a todo |
+| Method | Endpoint       | Description                 |
+| ------ | -------------- | --------------------------- |
+| GET    | `/todos`       | Get all todos               |
+| GET    | `/todos/count` | Get total and visible count |
+| POST   | `/todos`       | Create a new todo           |
+| PUT    | `/todos/:id`   | Update a todo               |
+| DELETE | `/todos/:id`   | Delete a todo               |
 
 ## Author
 
