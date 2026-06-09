@@ -1,12 +1,9 @@
 name: Monorepo CI/CD Pipeline
-
 on:
   push:
     branches: ["main"]
-
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   # 1. CI-JOBBET (Kontrollera koden)
   lint-project:
@@ -73,17 +70,24 @@ jobs:
           docker build --build-arg VITE_BACKEND_URL=$VITE_BACKEND_URL -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./frontend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      #CADDYFILE OCH DOCKER-COMPOSE SKICKAS IN TILL EC2 FÖR ATT KÖRA UPP CONTAINRARNA MED DE NYA BILDERNA
-      - name: Copy files to EC2
-        uses: appleboy/scp-action@v0.1.7
+      # Skriver Caddyfile direkt på EC2 via SSH
+      - name: Copy Caddyfile to EC2
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "Caddyfile,docker-compose.yml"
-          target: "/home/${{ secrets.EC2_USERNAME }}/app/"
-          overwrite: true
-          debug: true
+          script: |
+            cat > ~/app/Caddyfile << 'EOF'
+            notice-board.xyz {
+                handle /api/* {
+                    reverse_proxy backend:3000
+                }
+                handle {
+                    reverse_proxy frontend:80
+                }
+            }
+            EOF
 
       # SSH in på EC2 och starta om med de nya bilderna
       - name: Deploy to AWS EC2 via SSH
@@ -94,9 +98,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/app
-            # Logga in på ECR från servern för att få ladda ner
             aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-north-1.amazonaws.com
-            # Hämta de nya bilderna som GitHub just byggde
             docker compose pull
-            # Starta om containrarna utan att bygga något lokalt
             docker compose up -d --force-recreate
