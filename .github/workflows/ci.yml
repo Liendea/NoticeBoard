@@ -83,6 +83,7 @@ jobs:
           source: "Caddyfile,docker-compose.yml"
           target: "~/app/"
           overwrite: true
+          debug: true
 
       # SSH in på EC2 och starta om med de nya bilderna
       - name: Deploy to AWS EC2 via SSH
