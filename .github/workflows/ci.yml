@@ -82,6 +82,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "Caddyfile,docker-compose.yml"
           target: "~/app/"
+          overwrite: true
 
       # SSH in på EC2 och starta om med de nya bilderna
       - name: Deploy to AWS EC2 via SSH
